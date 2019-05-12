@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="google-signin-client_id" content="539897248109-17ijtppg68r0f1iunl3kh86po1lm7s4o.apps.googleusercontent.com">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css" />
+  <link rel="stylesheet" href="/vueWysiwyg.css">
+  <title>Document</title>
+</head>
+
+<body>
+  <!-- start of sidebar -->
+  <div id="page">
+
+      <nav class="mb-5 p-3 h-70 d-flex justify-content-end bg bg-primary">
+        
+          <form class="d-flex justify-content-end form-inline">
+              <button v-if="!isAdmin"  @click.prevent="calregister" class="m-2 btn btn-info my-2 my-sm-0" type="submit">signup</button>
+              <button v-if="!isAdmin" @click.prevent="calllogin" class="m-2 btn btn-info my-2 my-sm-0" type="submit">login</button>
+              <button v-if="isAdmin" @click.prevent="logout" class="m-2 btn btn-danger my-2 my-sm-0" type="submit">logout</button>
+          </form>
+      </nav> 
+
+    <div v-show="isLogin" class="container" id="login-page">
+      <div class="row">
+        <div class="col">
+            <form-login v-on:sign="onSignIn()" v-on:back="backHalUtama" v-on:signin-page="login"/>
+        </div>
+      </div>
+    </div>
+
+    <div v-show="isRegister" class="container" id="register-page">
+        <div class="row">
+            <div class="col">
+              <form-register v-on:back="backHalUtama" v-on:signup-page="register" />
+            </div>
+          </div>
+    </div>
+
+
+    <div v-show="isUtama" class="container" id="halaman-utama">
+      <h2 v-show="isDataUtamaNull">WELCOME FIRST MEMBER, PLEASE SIGN UP</h2>
+      <h2 v-show="!isDataUtamaNull"class="p-3 text-center">MINI WORDPRESS KITA</h2>
+      <form class="text-center" v-show="!isDataUtamaNull">
+          <input class="form-control py-2" type="search" type="text" v-model="search"><br>
+      </form>
+     
+      <div class="row">
+        <div v-for="blog in blogs" class="col-3">
+            <hal-utama v-on:detail-all="getOneArticle" v-bind:blog="blog" />
+        </div>
+      </div>
+    </div>
+
+    <div v-show="isDetail" class="container" id="halaman-detail">
+        <div class="row">
+          <div class="col">
+              <hal-detail v-on:mati-nyala="backHalUtama" v-bind:dataone="dataone" />
+          </div>
+        </div>
+      </div>
+    
+    <div v-show="isAdmin" class="container" id="halaman-admin">
+      <div class="row">
+          <div class="col-3">
+              <h3 class="text-center">Navigation</h3>
+            <nav class="nav flex-column">
+                <a class="m-2 nav-link btn btn-primary" @click.prevent="callAddArticle" href="#">Add Article</a>
+                <a class="m-2 nav-link btn btn-primary" @click.prevent="callListArticle" href="#">List Article</a>
+            </nav>
+          </div>
+
+          <div class="col-9">
+            <h2 v-show="alertNull"> Create Your Data </h2>
+            <div v-if="isAddArticle" class="col-md-6">
+              <form-create-article v-on:add-article="build"/>
+            </div>
+
+            <div class="col-xs-3" v-if="isUtamaAdmin" v-for="blog in blogsByUser">
+                <hal-utama-admin v-on:getone-article="getOne" v-on:delete-article="hapus" v-on:detail-all-admin="getOneArticleAdmin" v-bind:blog="blog" />
+            </div>
+
+            <div v-if="isUpdateArticle" class="col-md-6">
+                <unique-ubah-article v-on:ubah="update" v-bind:edit="edit"/>
+            </div>
+
+            <div v-if="isDetailAdmin" >
+                <hal-detail-admin v-on:mati-nyala-admin="backHalAdmin" v-bind:dataone="dataone" />
+            </div>
+
+          </div>
+      </div>
+    </div>
+
+    <!-- end of container -->
+  </div>
+  <!-- end -->
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
+  <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+  <script src="/vueWysiwyg.js"></script>
+  <script src="./component/login.js"></script>
+  <script src="./component//update-article.js"></script>
+  <script src="./component/article-detail-admin.js"></script>
+  <script src="./component/article-list-admin.js"></script>
+  <script src="./component/create-article.js"></script>
+  <script src="./component/register.js"></script>
+  <script src="./component/article-list-all.js"></script>
+  <script src="./component/article-detail-all.js"></script>
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+  <script src="./script.js"></script>
+ 
+</body>
+
+</html>
